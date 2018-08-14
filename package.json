@@ -1,0 +1,28 @@
+{
+  "name": "find-project-files",
+  "description": "finds files in a directory that are not ignored by .gitignore files in the filesystem",
+  "author": "Mike Bannister <mikebannister@gmail.com>",
+  "version": "0.0.0",
+  "engines": {
+    "node": ">=8"
+  },
+  "license": "MIT",
+  "scripts": {
+    "lint": "standard",
+    "pretest": "standard",
+    "test": "ava --verbose"
+  },
+  "dependencies": {
+    "fs-extra": "^7.0.0",
+    "ignore": "^5.0.1",
+    "invariant": "^2.2.4",
+    "klaw-sync": "^4.0.0",
+    "lodash": "^4.17.10",
+    "tmp": "^0.0.33"
+  },
+  "devDependencies": {
+    "ava": "^0.25.0",
+    "dedent": "^0.7.0",
+    "standard": "^11.0.1"
+  }
+}
