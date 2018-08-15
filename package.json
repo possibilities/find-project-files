@@ -2,7 +2,7 @@
   "name": "find-project-files",
   "description": "finds files in a directory that are not ignored by .gitignore files in the filesystem",
   "author": "Mike Bannister <mikebannister@gmail.com>",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "engines": {
     "node": ">=8"
   },
