@@ -61,12 +61,7 @@ const findProjectFiles = rootPath => {
   // Build up a filter that knows about gitignore files
   const filter = getIgnoreFilter(rootPath)
   // Get all the files in tree using filter
-  const files = walkTreeSync(rootPath, { filter })
-  // mutate the path to be a relative path
-  return files.map(file => ({
-    stats: file.stats,
-    path: relativePath(rootPath, file.path)
-  }))
+  return walkTreeSync(rootPath, { filter })
 }
 
 module.exports = findProjectFiles
