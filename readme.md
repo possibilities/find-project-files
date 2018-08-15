@@ -1,4 +1,4 @@
-# Find project files
+# Find project files [![CircleCI](https://circleci.com/gh/possibilities/find-project-files.svg?style=svg)](https://circleci.com/gh/possibilities/find-project-files)
 
 Finds files in a directory that are not ignored by `.gitignore` files in the filesystem
 
