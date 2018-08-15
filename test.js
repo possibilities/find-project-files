@@ -1,6 +1,6 @@
 const findProjectFiles = require('./index')
 const { dirSync: tempDirSync } = require('tmp')
-const { join: joinPath, dirname } = require('path')
+const { join: joinPath, dirname, relative: relativePath } = require('path')
 const { writeFileSync, mkdirsSync } = require('fs-extra')
 const forEach = require('lodash/forEach')
 const dedent = require('dedent')
@@ -30,7 +30,8 @@ test('no ignore file', t => {
   })
 
   t.deepEqual(
-    findProjectFiles(fixturePath).map(file => file.path),
+    findProjectFiles(fixturePath)
+      .map(file => relativePath(fixturePath, file.path)),
     [
       'dir-1',
       'dir-1/file-1',
@@ -55,7 +56,8 @@ test('excludes .git dir', t => {
   })
 
   t.deepEqual(
-    findProjectFiles(fixturePath).map(file => file.path),
+    findProjectFiles(fixturePath)
+      .map(file => relativePath(fixturePath, file.path)),
     [
       'dir-1',
       'dir-1/file-1'
@@ -81,7 +83,8 @@ test('root ignore file', t => {
   })
 
   t.deepEqual(
-    findProjectFiles(fixturePath).map(file => file.path),
+    findProjectFiles(fixturePath)
+      .map(file => relativePath(fixturePath, file.path)),
     [
       '.gitignore',
       'dir-2',
@@ -117,7 +120,8 @@ test('subdir ignore file', t => {
   })
 
   t.deepEqual(
-    findProjectFiles(fixturePath).map(file => file.path),
+    findProjectFiles(fixturePath)
+      .map(file => relativePath(fixturePath, file.path)),
     [
       '.gitignore',
       'dir-2',
