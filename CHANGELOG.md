@@ -1,3 +1,11 @@
+### 0.0.3 (crafted 08/22/18)
+
+Changes:
+
+  * (Mike Bannister) Delint
+  * (Mike Bannister) Add readme
+  * (Mike Bannister) Export helper for checking single file
+
 ### 0.0.2 (crafted 08/14/18)
 
 Changes:
