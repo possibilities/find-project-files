@@ -1,7 +1,7 @@
 const {
   resolve: resolvePath,
   normalize: normalizePath,
-  relative: relativePath,
+  relative: getRelativePath,
   join: joinPath,
   dirname: dirnameOfPath
 } = require('path')
@@ -13,7 +13,7 @@ const invariant = require('invariant')
 // Find all the parent directories for a file so we can search them
 // for .gitignore files
 const getParentDirsForFilePath = (rootPath, filePath) => {
-  const path = relativePath(rootPath, filePath)
+  const path = getRelativePath(rootPath, filePath)
   return dirnameOfPath(path).startsWith('.')
     ? dirnameOfPath(path).split('/')
     : ('./' + dirnameOfPath(path)).split('/')
@@ -45,11 +45,15 @@ const getIgnoreFilter = rootPath => {
     if (file.path.endsWith('/.git')) return false
     // Dredge up a helper that respects all .gitignore files
     // above it in the file hierarchy
-    const ignoreFiles = ignoreFilePathsForFilePath(rootPath, file.path)
+    const absolutePath = resolvePath(rootPath, file.path)
+    const ignoreFiles = ignoreFilePathsForFilePath(rootPath, absolutePath)
     // If any of the ignore files apply go ahead and ignore the file
-    const path = relativePath(rootPath, file.path)
+    const path = getRelativePath(rootPath, absolutePath)
     return !ignoreFiles
-      .some(ignoreFile => ignoreFile.helper.ignores(relativePath(ignoreFile.path, path)))
+      .some(ignoreFile => {
+        const relativePath = getRelativePath(ignoreFile.path, path)
+        return ignoreFile.helper.ignores(relativePath)
+      })
   }
 }
 
@@ -64,4 +68,10 @@ const findProjectFiles = rootPath => {
   return walkTreeSync(rootPath, { filter })
 }
 
+const checkIsProjectFilePath = (rootPath, filePath) => {
+  const filter = getIgnoreFilter(rootPath)
+  return filter({ path: filePath })
+}
+
 module.exports = findProjectFiles
+module.exports.checkIsProjectFilePath = checkIsProjectFilePath

@@ -1,4 +1,5 @@
 const findProjectFiles = require('./index')
+const { checkIsProjectFilePath } = require('./index')
 const { dirSync: tempDirSync } = require('tmp')
 const { join: joinPath, dirname, relative: relativePath } = require('path')
 const { writeFileSync, mkdirsSync } = require('fs-extra')
@@ -16,7 +17,19 @@ const createFixture = files => {
   return tempPath
 }
 
-test('no ignore file', t => {
+test('(checkIsProjectFilePath) checks file against project', t => {
+  const fixturePath = createFixture({
+    '.gitignore': `file-1`,
+    'file-1': '',
+    'file-2': '',
+  })
+
+  t.falsy(checkIsProjectFilePath(fixturePath, 'file-1'))
+  t.truthy(checkIsProjectFilePath(fixturePath, 'file-2'))
+  t.truthy(true)
+})
+
+test('(findProjectFiles) no ignore file', t => {
   const fixturePath = createFixture({
     'dir-1/file-1': '',
     'dir-1/file-2': '',
@@ -49,7 +62,7 @@ test('no ignore file', t => {
   )
 })
 
-test('excludes .git dir', t => {
+test('(findProjectFiles) excludes .git dir', t => {
   const fixturePath = createFixture({
     '.git/HEAD': 'master',
     'dir-1/file-1': ''
@@ -65,7 +78,7 @@ test('excludes .git dir', t => {
   )
 })
 
-test('root ignore file', t => {
+test('(findProjectFiles) root ignore file', t => {
   const fixturePath = createFixture({
     '.gitignore': dedent`
       dir-1
@@ -97,7 +110,7 @@ test('root ignore file', t => {
   )
 })
 
-test('subdir ignore file', t => {
+test('(findProjectFiles) subdir ignore file', t => {
   const fixturePath = createFixture({
     '.gitignore': dedent`
       dir-1
