@@ -21,7 +21,7 @@ test('(checkIsProjectFilePath) checks file against project', t => {
   const fixturePath = createFixture({
     '.gitignore': `file-1`,
     'file-1': '',
-    'file-2': '',
+    'file-2': ''
   })
 
   t.falsy(checkIsProjectFilePath(fixturePath, 'file-1'))
