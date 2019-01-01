@@ -42,7 +42,7 @@ const getIgnoreFilter = (rootPath, globalIgnorePattern = []) => {
     // Dredge up a helper that respects all .gitignore files
     // above it in the file hierarchy
     const absolutePath = resolve(rootPath, file.path)
-    const relativePath = relative(rootPath, file.path)
+    const relativePath = relative(rootPath, absolutePath)
     const ignoreFiles = [
       {
         path: dirname(relativePath),
