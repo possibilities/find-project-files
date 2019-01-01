@@ -10,7 +10,7 @@ Finds files in a directory that are not ignored by `.gitignore` files in the fil
 const findProjectFiles = require('find-project-files')
 
 const files = findProjectFiles('/path/to/git/based/project')
-console.info(files) // ['index.js', ...]
+console.info(files) //-> ['index.js', ...]
 ```
 
 #### `checkIsProjectFilePath`
@@ -20,9 +20,9 @@ const { checkIsProjectFilePath } = require('find-project-files')
 
 const isProjectFile =
   checkIsProjectFilePath('/path/to/git/based/project/file')
-console.info(isProjectFile) // true
+console.info(isProjectFile) //-> true
 
 const isIgnoredProjectFile =
   checkIsProjectFilePath('/path/to/git/based/project/ignored-file')
-console.info(isIgnoredProjectFile) // false
+console.info(isIgnoredProjectFile) //-> false
 ```
