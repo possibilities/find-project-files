@@ -1,6 +1,5 @@
 const {
   resolve: resolvePath,
-  normalize: normalizePath,
   relative: getRelativePath,
   join: joinPath,
   dirname: dirnameOfPath
@@ -8,7 +7,6 @@ const {
 const { existsSync, readFileSync } = require('fs-extra')
 const walkTreeSync = require('klaw-sync')
 const createIgnore = require('ignore')
-const invariant = require('invariant')
 
 // Find all the parent directories for a file so we can search them
 // for .gitignore files
@@ -57,11 +55,7 @@ const getIgnoreFilter = rootPath => {
   }
 }
 
-const isAbsolutePath = path => resolvePath(path) === normalizePath(path)
-
 const findProjectFiles = rootPath => {
-  invariant(isAbsolutePath(rootPath), '`rootPath` argument to `find-project-files` must be absolute')
-
   // Build up a filter that knows about gitignore files
   const filter = getIgnoreFilter(rootPath)
   // Get all the files in tree using filter

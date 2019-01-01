@@ -3,13 +3,13 @@ const { checkIsProjectFilePath } = require('./index')
 const { dirSync: tempDirSync } = require('tmp')
 const { join: joinPath, dirname, relative: relativePath } = require('path')
 const { writeFileSync, mkdirsSync } = require('fs-extra')
-const forEach = require('lodash/forEach')
 const dedent = require('dedent')
 const test = require('ava')
 
 const createFixture = files => {
   const tempPath = tempDirSync().name
-  forEach(files, (content, name) => {
+  Object.keys(files).forEach(name => {
+    const content = files[name]
     const fullPath = joinPath(tempPath, name)
     mkdirsSync(dirname(fullPath))
     writeFileSync(fullPath, content)
