@@ -1,3 +1,16 @@
+### 0.0.4 (crafted 12/31/18)
+
+Changes:
+
+  * (Mike Bannister) Fix tests
+  * (Mike Bannister) Allow global ignore pattern
+  * (Mike Bannister) Simplify naming
+  * (Mike Bannister) Cleanup dependencies
+  * (Mike Bannister) Cleanup readme
+  * (Mike Bannister) Cleanup readme
+  * (Mike Bannister) Fix readme mistake
+  * (Mike Bannister) Fix readme examples
+
 ### 0.0.3 (crafted 08/22/18)
 
 Changes:
