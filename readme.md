@@ -12,13 +12,17 @@ const findProjectFiles = require('find-project-files')
 const files = findProjectFiles('/path/to/git/based/project')
 console.info(files) // ['index.js', ...]
 ```
+
 #### `checkIsProjectFilePath`
 
 ```javascript
 const { checkIsProjectFilePath } = require('find-project-files')
 
-const isProjectFile = findProjectFiles('/path/to/git/based/project/file')
+const isProjectFile =
+  checkIsProjectFilePath('/path/to/git/based/project/file')
 console.info(isProjectFile) // true
-const isIgnoredProjectFile = findProjectFiles('/path/to/git/based/project/ignored-file')
-console.info(isIgnoredProjectFile) // true
+
+const isIgnoredProjectFile =
+  checkIsProjectFilePath('/path/to/git/based/project/ignored-file')
+console.info(isIgnoredProjectFile) // false
 ```
