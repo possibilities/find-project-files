@@ -20,5 +20,5 @@ const { checkIsProjectFilePath } = require('find-project-files')
 const isProjectFile = findProjectFiles('/path/to/git/based/project/file')
 console.info(isProjectFile) // true
 const isIgnoredProjectFile = findProjectFiles('/path/to/git/based/project/ignored-file')
-console.info(isIgnoredProjectFile) // false
+console.info(isIgnoredProjectFile) // true
 ```
