@@ -69,7 +69,7 @@ const findProjectFiles = (rootPath, globalIgnorePattern) => {
 const checkIsProjectFilePath = (
   rootPath,
   filePath,
-  globalIgnorePattern = []
+  globalIgnorePattern
 ) => {
   const filter = getIgnoreFilter(rootPath, globalIgnorePattern)
   return filter({ path: filePath })
