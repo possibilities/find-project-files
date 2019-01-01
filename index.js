@@ -21,7 +21,8 @@ const ignoreFilePathsForFilePath = (rootPath, filePath) => {
     const ignoreFilePath = join(rootPath, parentDirs.join('/'), '.gitignore')
     if (existsSync(ignoreFilePath)) {
       const ignoreFileContents = readFileSync(ignoreFilePath, 'utf8')
-      const helper = createIgnore().add(ignoreFileContents)
+      const helper = createIgnore()
+        .add(ignoreFileContents)
       const path = parentDirs.join('/')
       ignoreFiles.push({ helper, path })
     }
@@ -31,33 +32,46 @@ const ignoreFilePathsForFilePath = (rootPath, filePath) => {
 }
 
 // A filter that respects .gitignore files
-const getIgnoreFilter = rootPath => {
+const getIgnoreFilter = (rootPath, globalIgnorePattern = []) => {
+  const globalIgnorePatterns = Array.isArray(globalIgnorePattern)
+    ? globalIgnorePattern
+    : [globalIgnorePattern]
   return file => {
     // Never include anything under `./.git`
     if (file.path.endsWith('/.git')) return false
     // Dredge up a helper that respects all .gitignore files
     // above it in the file hierarchy
     const absolutePath = resolve(rootPath, file.path)
-    const ignoreFiles = ignoreFilePathsForFilePath(rootPath, absolutePath)
+    const relativePath = relative(rootPath, file.path)
+    const ignoreFiles = [
+      {
+        path: dirname(relativePath),
+        helper: createIgnore().add(globalIgnorePatterns)
+      },
+      ...ignoreFilePathsForFilePath(rootPath, absolutePath)
+    ]
     // If any of the ignore files apply go ahead and ignore the file
-    const path = relative(rootPath, absolutePath)
     return !ignoreFiles
       .some(ignoreFile => {
-        const relativePath = relative(ignoreFile.path, path)
-        return ignoreFile.helper.ignores(relativePath)
+        const ignoreRelativePath = relative(ignoreFile.path, relativePath)
+        return ignoreFile.helper.ignores(ignoreRelativePath)
       })
   }
 }
 
-const findProjectFiles = rootPath => {
+const findProjectFiles = (rootPath, globalIgnorePattern) => {
   // Build up a filter that knows about gitignore files
-  const filter = getIgnoreFilter(rootPath)
+  const filter = getIgnoreFilter(rootPath, globalIgnorePattern)
   // Get all the files in tree using filter
   return walkTreeSync(rootPath, { filter })
 }
 
-const checkIsProjectFilePath = (rootPath, filePath) => {
-  const filter = getIgnoreFilter(rootPath)
+const checkIsProjectFilePath = (
+  rootPath,
+  filePath,
+  globalIgnorePattern = []
+) => {
+  const filter = getIgnoreFilter(rootPath, globalIgnorePattern)
   return filter({ path: filePath })
 }
 

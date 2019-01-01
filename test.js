@@ -78,6 +78,36 @@ test('(findProjectFiles) excludes .git dir', t => {
   )
 })
 
+test('(findProjectFiles) excludes additional patterns', t => {
+  const fixturePath = createFixture({
+    'dir-1/file-1': '',
+    'dir-1/file-2': '',
+    'dir-1/file-3': '',
+    'dir-1/file-4': ''
+  })
+
+  t.deepEqual(
+    findProjectFiles(fixturePath, 'file-2')
+      .map(file => relativePath(fixturePath, file.path)),
+    [
+      'dir-1',
+      'dir-1/file-1',
+      'dir-1/file-3',
+      'dir-1/file-4'
+    ]
+  )
+
+  t.deepEqual(
+    findProjectFiles(fixturePath, ['file-2', 'file-4'])
+      .map(file => relativePath(fixturePath, file.path)),
+    [
+      'dir-1',
+      'dir-1/file-1',
+      'dir-1/file-3'
+    ]
+  )
+})
+
 test('(findProjectFiles) root ignore file', t => {
   const fixturePath = createFixture({
     '.gitignore': dedent`
