@@ -1,9 +1,4 @@
-const {
-  resolve: resolvePath,
-  relative: getRelativePath,
-  join: joinPath,
-  dirname: dirnameOfPath
-} = require('path')
+const { resolve, relative, join, dirname } = require('path')
 const { existsSync, readFileSync } = require('fs-extra')
 const walkTreeSync = require('klaw-sync')
 const createIgnore = require('ignore')
@@ -11,10 +6,10 @@ const createIgnore = require('ignore')
 // Find all the parent directories for a file so we can search them
 // for .gitignore files
 const getParentDirsForFilePath = (rootPath, filePath) => {
-  const path = getRelativePath(rootPath, filePath)
-  return dirnameOfPath(path).startsWith('.')
-    ? dirnameOfPath(path).split('/')
-    : ('./' + dirnameOfPath(path)).split('/')
+  const path = relative(rootPath, filePath)
+  return dirname(path).startsWith('.')
+    ? dirname(path).split('/')
+    : ('./' + dirname(path)).split('/')
 }
 
 // Find any .gitignore files that would apply to a specific path
@@ -23,11 +18,10 @@ const ignoreFilePathsForFilePath = (rootPath, filePath) => {
 
   let ignoreFiles = []
   while (parentDirs.length) {
-    const ignoreFilePath = joinPath(rootPath, parentDirs.join('/'), '.gitignore')
+    const ignoreFilePath = join(rootPath, parentDirs.join('/'), '.gitignore')
     if (existsSync(ignoreFilePath)) {
       const ignoreFileContents = readFileSync(ignoreFilePath, 'utf8')
-      const helper = createIgnore()
-        .add(ignoreFileContents)
+      const helper = createIgnore().add(ignoreFileContents)
       const path = parentDirs.join('/')
       ignoreFiles.push({ helper, path })
     }
@@ -43,13 +37,13 @@ const getIgnoreFilter = rootPath => {
     if (file.path.endsWith('/.git')) return false
     // Dredge up a helper that respects all .gitignore files
     // above it in the file hierarchy
-    const absolutePath = resolvePath(rootPath, file.path)
+    const absolutePath = resolve(rootPath, file.path)
     const ignoreFiles = ignoreFilePathsForFilePath(rootPath, absolutePath)
     // If any of the ignore files apply go ahead and ignore the file
-    const path = getRelativePath(rootPath, absolutePath)
+    const path = relative(rootPath, absolutePath)
     return !ignoreFiles
       .some(ignoreFile => {
-        const relativePath = getRelativePath(ignoreFile.path, path)
+        const relativePath = relative(ignoreFile.path, path)
         return ignoreFile.helper.ignores(relativePath)
       })
   }
